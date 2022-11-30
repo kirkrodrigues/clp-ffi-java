@@ -1,0 +1,89 @@
+name: build-package
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'assembly-lib.xml'
+      - 'assembly-package.xml'
+      - 'CMakeLists.txt'
+      - 'pom.xml'
+      - 'src/**'
+      - '.github/workflows/native-lib-build/action.yml'
+      - '.github/workflows/build-package.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'assembly-lib.xml'
+      - 'assembly-package.xml'
+      - 'CMakeLists.txt'
+      - 'pom.xml'
+      - 'src/**'
+      - '.github/workflows/native-lib-build/action.yml'
+      - '.github/workflows/build-package.yml'
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME_BASE: ${{github.repository}}/clp-core-x86
+
+concurrency: build-${{github.ref}}
+
+jobs:
+  build-lib-for-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Install requirements
+        run: |
+          brew install boost cmake gcc java11 maven
+
+      - name: Build native library
+        id: build
+        uses: ./.github/actions/native-lib-build
+
+      - name: Upload native library
+        uses: actions/upload-artifact@main
+        with:
+          name: libclp-ffi-java-macos
+          path: ${{github.workspace}}/clp-ffi-*-native-lib/
+          if-no-files-found: error
+
+  build-package:
+    needs: build-lib-for-macos
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Install requirements
+        run: |
+          sudo apt update
+          sudo apt install -y cmake gcc-8 g++-8 openjdk-11-jdk maven
+          update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 800 --slave /usr/bin/g++ g++ /usr/bin/g++-8
+
+      - name: Build native library for Linux
+        id: build
+        uses: ./.github/actions/native-lib-build
+
+      - name: Download MacOS' libclp-ffi-java
+        uses: actions/download-artifact@v3
+        with:
+          name: libclp-ffi-java-macos
+          path: ./target/.
+
+      - name: Build package
+        run: mvn package -DskipTests -Dmaven.javadoc.skip=true -Dmaven.source.skip
+
+      - name: Upload package
+        uses: actions/upload-artifact@main
+        with:
+          name: clp-ffi
+          path: ./target/clp-ffi-*.jar
+          if-no-files-found: error

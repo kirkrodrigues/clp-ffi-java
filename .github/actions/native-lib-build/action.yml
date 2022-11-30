@@ -1,0 +1,15 @@
+name: "Builds and bundles libclp-ffi-java"
+description: "Builds libclp-ffi-java on the current platform"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Build
+      run: mvn generate-resources
+      shell: bash
+
+    - name: Bundle
+      run: |
+        mvn assembly:single@assemble-lib-tar
+        mv ./target/clp-ffi-*-native-lib $GITHUB_WORKSPACE/.
+      shell: bash
