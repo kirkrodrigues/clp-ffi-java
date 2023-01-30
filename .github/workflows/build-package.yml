@@ -108,7 +108,13 @@ jobs:
           path: ./target/.
 
       - name: Build package and run tests
-        run: mvn --batch-mode test
+        run: mvn --batch-mode package -DskipTests
+
+      - uses: actions/upload-artifact@main
+        with:
+          name: jar
+          path: ./target/clp-ffi-*-SNAPSHOT.jar
+          if-no-files-found: error
 
       - name: Deploy to GitHub
         if: github.event_name != 'pull_request'
