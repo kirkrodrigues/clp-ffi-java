@@ -28,6 +28,28 @@ on:
 concurrency: build-${{github.ref}}
 
 jobs:
+  build-lib-for-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Install requirements
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential cmake
+
+      - name: Build native library
+        id: build
+        uses: ./.github/actions/native-lib-build
+
+      - uses: actions/upload-artifact@main
+        with:
+          name: libclp-ffi-java-macos
+          path: ${{github.workspace}}/clp-ffi-*-native-lib/
+          if-no-files-found: error
+
   build-lib-for-macos:
     runs-on: macos-latest
     steps:
