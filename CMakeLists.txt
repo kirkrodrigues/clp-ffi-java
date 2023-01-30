@@ -68,5 +68,8 @@ target_compile_options(clp-ffi-java PRIVATE
         "-D_REENTRANT"  # Necessary since the JVM is multithreaded
         )
 target_link_options(clp-ffi-java PRIVATE
-        ${STATIC_STDLIB_OPTIONS}
+        -nostdlib
+        )
+target_link_libraries(clp-ffi-java PRIVATE
+        gcc
         )

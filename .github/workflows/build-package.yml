@@ -46,7 +46,7 @@ jobs:
 
       - uses: actions/upload-artifact@main
         with:
-          name: libclp-ffi-java-macos
+          name: libclp-ffi-java-linux
           path: ${{github.workspace}}/clp-ffi-*-native-lib/
           if-no-files-found: error
 
