@@ -22,11 +22,15 @@ add_definitions("-DSOURCE_PATH_SIZE=${SOURCE_PATH_SIZE}")
 
 list(APPEND STATIC_STDLIB_OPTIONS "-static-libstdc++")
 list(APPEND LINK_LIBS "")
+list(APPEND LINK_OPTIONS "")
 message(STATUS "Compiler: ${CMAKE_CXX_COMPILER_ID}")
 if ((NOT CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
         AND (NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang"))
     list(APPEND STATIC_STDLIB_OPTIONS "-static-libgcc")
+    list(APPEND LINK_OPTIONS "-nostdlib")
     list(APPEND LINK_LIBS "gcc")
+else ()
+    list(APPEND LINK_OPTIONS "-nolibc")
 endif ()
 
 find_package(JNI REQUIRED)
@@ -70,7 +74,7 @@ target_compile_options(clp-ffi-java PRIVATE
         "-D_REENTRANT"  # Necessary since the JVM is multithreaded
         )
 target_link_options(clp-ffi-java PRIVATE
-        -nostdlib
+        "${LINK_OPTIONS}"
         )
 target_link_libraries(clp-ffi-java PRIVATE
         "${LINK_LIBS}"
