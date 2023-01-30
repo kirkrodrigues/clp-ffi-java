@@ -21,10 +21,12 @@ string(LENGTH "${CMAKE_SOURCE_DIR}/" SOURCE_PATH_SIZE)
 add_definitions("-DSOURCE_PATH_SIZE=${SOURCE_PATH_SIZE}")
 
 list(APPEND STATIC_STDLIB_OPTIONS "-static-libstdc++")
+list(APPEND LINK_LIBS "")
 message(STATUS "Compiler: ${CMAKE_CXX_COMPILER_ID}")
 if ((NOT CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
         AND (NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang"))
     list(APPEND STATIC_STDLIB_OPTIONS "-static-libgcc")
+    list(APPEND LINK_LIBS "gcc")
 endif ()
 
 find_package(JNI REQUIRED)
@@ -71,5 +73,5 @@ target_link_options(clp-ffi-java PRIVATE
         -nostdlib
         )
 target_link_libraries(clp-ffi-java PRIVATE
-        gcc
+        "${LINK_LIBS}"
         )
