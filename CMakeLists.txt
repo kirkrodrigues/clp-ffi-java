@@ -20,6 +20,11 @@ endif()
 string(LENGTH "${CMAKE_SOURCE_DIR}/" SOURCE_PATH_SIZE)
 add_definitions("-DSOURCE_PATH_SIZE=${SOURCE_PATH_SIZE}")
 
+list(APPEND STATIC_STDLIB_OPTIONS "-static-libstdc++")
+if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    list(APPEND STATIC_STDLIB_OPTIONS "-static-libgcc")
+endif ()
+
 find_package(JNI REQUIRED)
 
 add_library(clp-ffi-java SHARED
@@ -61,6 +66,5 @@ target_compile_options(clp-ffi-java PRIVATE
         "-D_REENTRANT"  # Necessary since the JVM is multithreaded
         )
 target_link_options(clp-ffi-java PRIVATE
-        -static-libgcc
-        -static-libstdc++
+        ${STATIC_STDLIB_OPTIONS}
         )
