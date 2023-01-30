@@ -21,6 +21,7 @@ string(LENGTH "${CMAKE_SOURCE_DIR}/" SOURCE_PATH_SIZE)
 add_definitions("-DSOURCE_PATH_SIZE=${SOURCE_PATH_SIZE}")
 
 list(APPEND STATIC_STDLIB_OPTIONS "-static-libstdc++")
+message(STATUS "Compiler: ${CMAKE_CXX_COMPILER_ID}")
 if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     list(APPEND STATIC_STDLIB_OPTIONS "-static-libgcc")
 endif ()
