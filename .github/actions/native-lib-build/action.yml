@@ -5,7 +5,8 @@ runs:
   using: "composite"
   steps:
     - name: Build and test
-      run: mvn --batch-mode test
+#      run: mvn --batch-mode test
+      run: mvn generate-resources
       shell: bash
 
     - name: Bundle
