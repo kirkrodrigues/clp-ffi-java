@@ -10,6 +10,7 @@ on:
       - 'assembly-package.xml'
       - 'CMakeLists.txt'
       - 'pom.xml'
+      - 'scripts/install-deps-and-build-native-lib.sh'
       - 'src/**'
   pull_request:
     paths:
@@ -20,6 +21,7 @@ on:
       - 'assembly-package.xml'
       - 'CMakeLists.txt'
       - 'pom.xml'
+      - 'scripts/install-deps-and-build-native-lib.sh'
       - 'src/**'
   workflow_dispatch:
 
