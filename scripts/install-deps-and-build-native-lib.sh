@@ -3,4 +3,4 @@
 apt-get update
 apt-get install -y build-essential cmake maven
 
-mvn --batch-mode compile validate assembly:single@assemble-lib-dir
+mvn --batch-mode generate-resources validate assembly:single@assemble-lib-dir
