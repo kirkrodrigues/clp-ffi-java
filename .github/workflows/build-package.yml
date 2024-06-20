@@ -123,7 +123,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: ls -l
+      - run: |-
+          ls -l clp-ffi-*/
+          ls -l target/
 
       - uses: actions/upload-artifact@v4
         with:
