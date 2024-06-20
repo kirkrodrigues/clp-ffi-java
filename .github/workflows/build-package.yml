@@ -122,3 +122,10 @@ jobs:
         run: mvn --batch-mode deploy -DskipTests -Pgithub_release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: clp-ffi-java
+          path: ${{github.workspace}}/target/clp-ffi-*.jar
+          if-no-files-found: error
+          retention-days: 1
