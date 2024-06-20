@@ -115,7 +115,7 @@ jobs:
           path: ./target/.
 
       - name: Build package and run tests
-        run: mvn --batch-mode test
+        run: mvn --batch-mode package
 
       - name: Deploy to GitHub
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
